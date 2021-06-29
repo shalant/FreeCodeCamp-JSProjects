@@ -198,10 +198,12 @@ nav {
 .social-icons {
   display: none;
 }
+
+/* by default hide links */
 .links {
-  /* height: 0;
+  height: 0;
   overflow: hidden;
-  transition: var(--transition); */
+  transition: var(--transition);
 }
 .show-links {
   height: 10rem;
@@ -222,6 +224,7 @@ nav {
     display: none;
   }
   .links {
+    /* important to add */
     height: auto;
     display: flex;
   }
