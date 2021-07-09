@@ -15,6 +15,8 @@ let editID = '';
 form.addEventListener('submit', addItem)
 // clear items
 clearBtn.addEventListener('click', clearItems);
+// load items
+window.addEventListener('DOMContentLoaded', setupItems);
 
 // ****** FUNCTIONS **********
 function addItem(e) {
@@ -22,6 +24,7 @@ function addItem(e) {
     const value = grocery.value;
     const id = new Date().getTime().toString();
     if(value && !editFlag) {
+        createListItem(id, value);
         const element = document.createElement('article');
         // add class
         element.classList.add('grocery-item');
@@ -119,6 +122,7 @@ function setBackToDefault() {
     submitBtn.textContent = 'submit';
 }
 // ****** LOCAL STORAGE **********
+// add to local storage
 function addToLocalStorage(id, value) {
     // ES6 feature allows us to shorten this:
     // const grocery = {id:id, value:value}
@@ -126,9 +130,14 @@ function addToLocalStorage(id, value) {
     let items = getLocalStorage();
         console.log(items);
     items.push(grocery);
-    localStorage.setItem('list', JSON.stringify(items))
+    localStorage.setItem('list', JSON.stringify(items));
     // console.log('added to local storage');
 }
+function getLocalStorage() {
+    return localStorage.getItem('list')
+    ? JSON.parse(localStorage.getItem('list'))
+    : [];
+
 function removeFromLocalStorage(id) {
     let items = getLocalStorage();
 
@@ -138,6 +147,7 @@ function removeFromLocalStorage(id) {
         }
     })
     localStorage.setItem('list', JSON.stringify(items))
+}
 }
 function editLocalStorage(id, value) {
     let items = getLocalStorage();
@@ -149,11 +159,7 @@ function editLocalStorage(id, value) {
     });
     localStorage.setItem('list', JSON.stringify(items))
 }
-function getLocalStorage() {
-    return localStorage.getItem('list')
-    ? JSON.parse(localStorage.getItem('list'))
-    : [];
-}
+
 // localStorage API
 
 // setItem
@@ -166,3 +172,35 @@ function getLocalStorage() {
 // localStorage.removeItem('orange')
 
 // ****** SETUP ITEMS **********
+function setupItems() {
+    let items = getLocalStorage();
+    if(items.length > 0) {
+        items.forEach(function(item) {
+            createListItem(item.id, item.value)
+        });
+        container.classList.add('show-container')
+    }
+}
+
+function createListItem(id, value) {
+    const element = document.createElement('article');
+        let attr = document.createAttribute('data-id');
+        attr.value = id;
+        element.setAttributeNode(attr);
+        element.classList.add('grocery-item');
+        element.innerHTML = ` <p class='title'>${value}</p>
+            <div class="btn-container">
+                <button type='button' class="edit-btn">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button type='button' class="delete-btn">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>`;
+        const deleteBtn = element.querySelector('.delete-btn');
+        const editBtn = element.querySelector('.edit-btn');
+        deleteBtn.addEventListener('click', deleteItem);
+        editBtn.addEventListener('click', editItem);
+        // append child
+        list.appendChild(element);
+}
