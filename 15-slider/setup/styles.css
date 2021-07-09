@@ -264,6 +264,7 @@ Slider
     height: 65vh;
   }
 }
+
 /* .slide:nth-child(1){
   left: 0;
 }
@@ -277,6 +278,6 @@ Slider
   left: 300%;
 }
 .slide{
-  transform: translateX(-100%);
+  transform: translateX(-200%);
 } */
-/* negative value moves to left */
+/* negative value moves to left /*
